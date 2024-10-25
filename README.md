@@ -19,6 +19,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemBuilder {
@@ -41,12 +42,13 @@ public class ItemBuilder {
         ItemMeta meta = item.getItemMeta();
         name = name.replace("&", "§");
         meta.setDisplayName(name);
-        lore.replaceAll(s -> s.replace("&", "§"));
-        meta.setLore(lore);
+        List<String> mutableLore = new ArrayList<>(lore);
+        mutableLore.replaceAll(s -> s.replace("&", "§"));
+        meta.setLore(mutableLore);
         item.setItemMeta(meta);
         return item;
     }
-
+    
 }
 ```
 
