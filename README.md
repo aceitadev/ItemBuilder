@@ -1,4 +1,4 @@
-# 🛠️ ItemBuilder - Criação de Itens Personalizados para Minecraft Bukkit
+# 🛠️ ItemBuilder
 
 Uma classe utilitária em Java para facilitar a criação de itens personalizados em plugins Bukkit para Minecraft. O `ItemBuilder` oferece métodos rápidos para criar itens com nome, descrição (lore), e outros atributos customizados.
 
@@ -102,5 +102,3 @@ public class Main {
     }
 }
 ```
-
-Com o `ItemBuilder`, você pode personalizar facilmente itens para seu plugin Bukkit, garantindo uma experiência mais imersiva e criativa para seus jogadores.
