@@ -17,7 +17,6 @@ Uma classe utilitária em Java para facilitar a criação de itens personalizado
 Copie a classe `ItemBuilder` para o seu projeto Bukkit:
 
 ```java
-import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -25,13 +24,16 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 public class ItemBuilder {
 
     private final ItemStack item;
 
     public ItemBuilder(Material material) {
         item = new ItemStack(material);
+    }
+
+    public ItemStack build() {
+        return item;
     }
 
     public void setAmount(int amount) {
@@ -94,7 +96,7 @@ public class ItemBuilder {
 Para criar um item básico sem personalizações:
 
 ```java
-ItemStack simpleItem = new ItemBuilder(Material.DIAMOND).item;
+ItemStack simpleItem = new ItemBuilder(Material.DIAMOND).build();
 ```
 
 ### 3. Criar um Item com Nome Personalizado
@@ -104,7 +106,7 @@ Para definir um nome customizado com cores, utilize o símbolo `&` para represen
 ```java
 ItemBuilder namedItemBuilder = new ItemBuilder(Material.GOLDEN_APPLE);
 namedItemBuilder.setName("&6Maçã Dourada");
-ItemStack namedItem = namedItemBuilder.item;
+ItemStack namedItem = namedItemBuilder.build();
 ```
 
 ### 4. Criar um Item com Nome e Lore (Descrição)
@@ -116,7 +118,7 @@ List<String> lore = List.of("&7Um item raro", "&aUse com sabedoria!");
 ItemBuilder loreItemBuilder = new ItemBuilder(Material.NETHER_STAR);
 loreItemBuilder.setName("&bEstrela do Nether");
 loreItemBuilder.setLore(lore);
-ItemStack loreItem = loreItemBuilder.item;
+ItemStack loreItem = loreItemBuilder.build();
 ```
 
 ### 5. Definir Quantidade e Modelo Personalizado
@@ -128,7 +130,7 @@ ItemBuilder customItemBuilder = new ItemBuilder(Material.DIAMOND_SWORD);
 customItemBuilder.setName("&cEspada Diamante");
 customItemBuilder.setAmount(10);
 customItemBuilder.setModelID(1); // Exemplo de modelo customizado
-ItemStack customItem = customItemBuilder.item;
+ItemStack customItem = customItemBuilder.build();
 ```
 
 ### 📝 Exemplo Completo
@@ -143,26 +145,26 @@ public class Main {
 
     public static void main(String[] args) {
         // Item simples
-        ItemStack simpleItem = new ItemBuilder(Material.DIAMOND).item;
+        ItemStack simpleItem = new ItemBuilder(Material.DIAMOND).build();
 
         // Item com nome personalizado
         ItemBuilder namedItemBuilder = new ItemBuilder(Material.GOLDEN_APPLE);
         namedItemBuilder.setName("&6Maçã Dourada");
-        ItemStack namedItem = namedItemBuilder.item;
+        ItemStack namedItem = namedItemBuilder.build();
 
         // Item com nome e lore
         List<String> lore = List.of("&7Um item raro", "&aUse com sabedoria!");
         ItemBuilder loreItemBuilder = new ItemBuilder(Material.NETHER_STAR);
         loreItemBuilder.setName("&bEstrela do Nether");
         loreItemBuilder.setLore(lore);
-        ItemStack loreItem = loreItemBuilder.item;
+        ItemStack loreItem = loreItemBuilder.build();
 
         // Item com quantidade e modelo customizado
         ItemBuilder customItemBuilder = new ItemBuilder(Material.DIAMOND_SWORD);
         customItemBuilder.setName("&cEspada Diamante");
         customItemBuilder.setAmount(10);
         customItemBuilder.setModelID(1);
-        ItemStack customItem = customItemBuilder.item;
+        ItemStack customItem = customItemBuilder.build();
 
         // Exibir detalhes (exemplo hipotético)
         System.out.println(namedItem.getItemMeta().getDisplayName());
