@@ -1,4 +1,5 @@
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -22,6 +23,7 @@ public class ItemBuilder {
     }
 
     public void setName(String name) {
+        if (name == null) return;
         name = name.replace("&", "§");
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
@@ -29,6 +31,7 @@ public class ItemBuilder {
     }
 
     public void setLore(List<String> lore) {
+        if (lore == null) return;
         lore = lore.stream().map(line -> line.replace("&", "§")).toList();
         ItemMeta meta = item.getItemMeta();
         meta.setLore(lore);
@@ -36,6 +39,7 @@ public class ItemBuilder {
     }
 
     public void setLore(String lore) {
+        if (lore == null) return;
         lore = lore.replace("&", "§");
         List<String> loreList = new ArrayList<>();
         loreList.add(lore);
@@ -45,6 +49,7 @@ public class ItemBuilder {
     }
 
     public void setLore(String... lore) {
+        if (lore == null) return;
         List<String> loreList = new ArrayList<>();
         for (String line : lore) {
             loreList.add(line.replace("&", "§"));
@@ -55,6 +60,7 @@ public class ItemBuilder {
     }
 
     public void addLineLore(String line) {
+        if (line == null) return;
         line = line.replace("&", "§");
         List<String> lore = item.getItemMeta().getLore();
         lore.add(line);
@@ -66,6 +72,24 @@ public class ItemBuilder {
     public void setModelID(int modelId) {
         ItemMeta meta = item.getItemMeta();
         meta.setCustomModelData(modelId);
+        item.setItemMeta(meta);
+    }
+
+    public void addEnchant(Enchantment enchant) {
+        item.addUnsafeEnchantment(enchant, 1);
+    }
+
+    public void addEnchant(Enchantment enchant, int level) {
+        item.addUnsafeEnchantment(enchant, level);
+    }
+
+    public void setGlowing(boolean glowing) {
+        ItemMeta meta = item.getItemMeta();
+        if (glowing) {
+            meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
+        } else {
+            meta.removeEnchant(Enchantment.ARROW_INFINITE);
+        }
         item.setItemMeta(meta);
     }
 
