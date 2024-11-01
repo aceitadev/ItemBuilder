@@ -165,11 +165,6 @@ public class Main {
         customItemBuilder.setAmount(10);
         customItemBuilder.setModelID(1);
         ItemStack customItem = customItemBuilder.build();
-
-        // Exibir detalhes (exemplo hipotético)
-        System.out.println(namedItem.getItemMeta().getDisplayName());
-        System.out.println(loreItem.getItemMeta().getLore());
-        System.out.println(customItem.getItemMeta().getDisplayName());
     }
 }
 ```
