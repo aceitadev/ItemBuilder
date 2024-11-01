@@ -1,6 +1,6 @@
 # 🛠️ ItemBuilder
 
-Uma classe utilitária em Java para facilitar a criação de itens personalizados em plugins Bukkit para Minecraft. O `ItemBuilder` oferece métodos convenientes para configurar um item com nome, descrição (lore), quantidade, modelo personalizado, e outros atributos customizados, proporcionando flexibilidade na personalização de itens em seu plugin.
+Uma classe utilitária em Java para facilitar a criação de itens personalizados em plugins Bukkit para Minecraft. O `ItemBuilder` oferece métodos convenientes para configurar um item com nome, descrição (lore), quantidade, modelo personalizado, encantamentos e outros atributos customizados, proporcionando flexibilidade na personalização de itens em seu plugin.
 
 ## 🚀 Funcionalidades
 
@@ -9,6 +9,8 @@ Uma classe utilitária em Java para facilitar a criação de itens personalizado
 - **📜 Descrição (Lore)**: Adicione uma descrição ao item com múltiplas linhas, também com suporte a cores.
 - **🔢 Quantidade**: Defina a quantidade do item diretamente.
 - **🆕 Modelo Personalizado**: Aplique um modelo customizado ao item.
+- **🔮 Encantamentos**: Adicione encantamentos ao item, com suporte a diferentes níveis.
+- **🌟 Brilho**: Defina se o item deve brilhar.
 
 ## 📚 Como Usar
 
@@ -18,6 +20,7 @@ Copie a classe `ItemBuilder` para o seu projeto Bukkit:
 
 ```java
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -41,6 +44,7 @@ public class ItemBuilder {
     }
 
     public void setName(String name) {
+        if (name == null) return;
         name = name.replace("&", "§");
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
@@ -48,6 +52,7 @@ public class ItemBuilder {
     }
 
     public void setLore(List<String> lore) {
+        if (lore == null) return;
         lore = lore.stream().map(line -> line.replace("&", "§")).toList();
         ItemMeta meta = item.getItemMeta();
         meta.setLore(lore);
@@ -55,6 +60,7 @@ public class ItemBuilder {
     }
 
     public void setLore(String lore) {
+        if (lore == null) return;
         lore = lore.replace("&", "§");
         List<String> loreList = new ArrayList<>();
         loreList.add(lore);
@@ -64,6 +70,7 @@ public class ItemBuilder {
     }
 
     public void setLore(String... lore) {
+        if (lore == null) return;
         List<String> loreList = new ArrayList<>();
         for (String line : lore) {
             loreList.add(line.replace("&", "§"));
@@ -74,6 +81,7 @@ public class ItemBuilder {
     }
 
     public void addLineLore(String line) {
+        if (line == null) return;
         line = line.replace("&", "§");
         List<String> lore = item.getItemMeta().getLore();
         lore.add(line);
@@ -88,6 +96,23 @@ public class ItemBuilder {
         item.setItemMeta(meta);
     }
 
+    public void addEnchant(Enchantment enchant) {
+        item.addUnsafeEnchantment(enchant, 1);
+    }
+
+    public void addEnchant(Enchantment enchant, int level) {
+        item.addUnsafeEnchantment(enchant, level);
+    }
+
+    public void setGlowing(boolean glowing) {
+        ItemMeta meta = item.getItemMeta();
+        if (glowing) {
+            meta.addEnchant(Enchantment.ARROW_INFINITE, 1, true);
+        } else {
+            meta.removeEnchant(Enchantment.ARROW_INFINITE);
+        }
+        item.setItemMeta(meta);
+    }
 }
 ```
 
@@ -121,22 +146,33 @@ loreItemBuilder.setLore(lore);
 ItemStack loreItem = loreItemBuilder.build();
 ```
 
-### 5. Definir Quantidade e Modelo Personalizado
+### 5. Adicionar Encantamentos
 
-Para definir a quantidade e o modelo personalizado do item:
+Para adicionar um encantamento ao item, você pode fazer o seguinte:
 
 ```java
-ItemBuilder customItemBuilder = new ItemBuilder(Material.DIAMOND_SWORD);
-customItemBuilder.setName("&cEspada Diamante");
-customItemBuilder.setAmount(10);
-customItemBuilder.setModelID(1); // Exemplo de modelo customizado
-ItemStack customItem = customItemBuilder.build();
+ItemBuilder enchantedItemBuilder = new ItemBuilder(Material.DIAMOND_SWORD);
+enchantedItemBuilder.setName("&cEspada Diamante");
+enchantedItemBuilder.addEnchant(Enchantment.DAMAGE_ALL, 3); // Adiciona encantamento de dano
+ItemStack enchantedItem = enchantedItemBuilder.build();
+```
+
+### 6. Definir se o Item Deve Brilhar
+
+Para fazer o item brilhar, use o método `setGlowing`:
+
+```java
+ItemBuilder glowingItemBuilder = new ItemBuilder(Material.IRON_SWORD);
+glowingItemBuilder.setName("&fEspada Brilhante");
+glowingItemBuilder.setGlowing(true);
+ItemStack glowingItem = glowingItemBuilder.build();
 ```
 
 ### 📝 Exemplo Completo
 
 ```java
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -159,12 +195,17 @@ public class Main {
         loreItemBuilder.setLore(lore);
         ItemStack loreItem = loreItemBuilder.build();
 
-        // Item com quantidade e modelo customizado
-        ItemBuilder customItemBuilder = new ItemBuilder(Material.DIAMOND_SWORD);
-        customItemBuilder.setName("&cEspada Diamante");
-        customItemBuilder.setAmount(10);
-        customItemBuilder.setModelID(1);
-        ItemStack customItem = customItemBuilder.build();
+        // Item encantado
+        ItemBuilder enchantedItemBuilder = new ItemBuilder(Material.DIAMOND_SWORD);
+        enchantedItemBuilder.setName("&cEspada Diamante");
+        enchantedItemBuilder.addEnchant(Enchantment.DAMAGE_ALL, 3);
+        ItemStack enchantedItem = enchantedItemBuilder.build();
+
+        // Item brilhante
+        ItemBuilder glowingItemBuilder = new ItemBuilder(Material.IRON_SWORD);
+        glowingItemBuilder.setName("&fEspada Brilhante");
+        glowingItemBuilder.setGlowing(true);
+        ItemStack glowingItem = glowingItemBuilder.build();
     }
 }
 ```
