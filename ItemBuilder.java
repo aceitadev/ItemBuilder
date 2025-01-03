@@ -32,9 +32,12 @@ public class ItemBuilder {
 
     public void setLore(List<String> lore) {
         if (lore == null) return;
-        lore = lore.stream().map(line -> line.replace("&", "§")).toList();
+        List<String> loreList = new ArrayList<>();
+        for (String line : lore) {
+            loreList.add(line.replace("&", "§"));
+        }
         ItemMeta meta = item.getItemMeta();
-        meta.setLore(lore);
+        meta.setLore(loreList);
         item.setItemMeta(meta);
     }
 
