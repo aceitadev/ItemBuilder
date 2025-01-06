@@ -11,6 +11,7 @@ Uma classe utilitária em Java para facilitar a criação de itens personalizado
 - **🆕 Modelo Personalizado**: Aplique um modelo customizado ao item.
 - **🔮 Encantamentos**: Adicione encantamentos ao item, com suporte a diferentes níveis.
 - **🌟 Brilho**: Defina se o item deve brilhar.
+- **💀 Cabeças de Jogador**: Adicione cabeças de jogador utilizando UUID ou base64.
 
 ## 📚 Como Usar
 
@@ -19,17 +20,29 @@ Uma classe utilitária em Java para facilitar a criação de itens personalizado
 Copie a classe `ItemBuilder` para o seu projeto Bukkit:
 
 ```java
+package aceita.alobby.components;
+
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class ItemBuilder {
 
-    private final ItemStack item;
+    private ItemStack item;
+
+    public ItemBuilder() {
+    }
 
     public ItemBuilder(Material material) {
         item = new ItemStack(material);
@@ -43,6 +56,43 @@ public class ItemBuilder {
         item.setAmount(amount);
     }
 
+    public void setHead(UUID uuid) {
+        ItemStack playerHead = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        SkullMeta skullMeta = (SkullMeta) playerHead.getItemMeta();
+        if (skullMeta != null) {
+            skullMeta.setOwner(Bukkit.getOfflinePlayer(uuid).getName());
+            playerHead.setItemMeta(skullMeta);
+        }
+        item = playerHead;
+    }
+
+    public void setHead(String base64) {
+        ItemStack skull = new ItemStack(Material.SKULL_ITEM, 1, (short) 3);
+        SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
+        if (skullMeta != null) {
+            try {
+                GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+                profile.getProperties().put("textures", new Property("textures", base64));
+                Field profileField = skullMeta.getClass().getDeclaredField("profile");
+                profileField.setAccessible(true);
+                profileField.set(skullMeta, profile);
+
+                skull.setItemMeta(skullMeta);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        item = skull;
+    }
+
+    public void setMaterial(Material material) {
+        if (item != null) {
+            item.setType(material);
+        } else {
+            item = new ItemStack(material);
+        }
+    }
+
     public void setName(String name) {
         if (name == null) return;
         name = name.replace("&", "§");
@@ -53,7 +103,7 @@ public class ItemBuilder {
 
     public void setLore(List<String> lore) {
         if (lore == null) return;
-        lore = lore.stream().map(line -> line.replace("&", "§")).toList();
+        lore = lore.stream().map(s -> s.replace("&", "§")).collect(Collectors.toList());
         ItemMeta meta = item.getItemMeta();
         meta.setLore(lore);
         item.setItemMeta(meta);
@@ -87,12 +137,6 @@ public class ItemBuilder {
         lore.add(line);
         ItemMeta meta = item.getItemMeta();
         meta.setLore(lore);
-        item.setItemMeta(meta);
-    }
-
-    public void setModelID(int modelId) {
-        ItemMeta meta = item.getItemMeta();
-        meta.setCustomModelData(modelId);
         item.setItemMeta(meta);
     }
 
@@ -168,44 +212,24 @@ glowingItemBuilder.setGlowing(true);
 ItemStack glowingItem = glowingItemBuilder.build();
 ```
 
-### 📝 Exemplo Completo
+### 7. Adicionar Cabeça de Jogador (por UUID ou Base64)
+
+#### Adicionar Cabeça de Jogador pelo UUID:
 
 ```java
-import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemStack;
+UUID playerUUID = UUID.fromString("player-uuid-here");
+ItemBuilder headItemBuilder = new ItemBuilder(Material.SKULL_ITEM);
+headItemBuilder.setHead(playerUUID);
+ItemStack playerHead = headItemBuilder.build();
+```
 
-import java.util.List;
+#### Adicionar Cabeça de Jogador por Base64:
 
-public class Main {
+Para obter o valor base64 de uma cabeça personalizada, acesse o site [Minecraft Heads](https://minecraft-heads.com/custom-heads), onde você pode criar cabeças personalizadas e obter o valor base64 da textura. Após obter o base64, faça assim:
 
-    public static void main(String[] args) {
-        // Item simples
-        ItemStack simpleItem = new ItemBuilder(Material.DIAMOND).build();
-
-        // Item com nome personalizado
-        ItemBuilder namedItemBuilder = new ItemBuilder(Material.GOLDEN_APPLE);
-        namedItemBuilder.setName("&6Maçã Dourada");
-        ItemStack namedItem = namedItemBuilder.build();
-
-        // Item com nome e lore
-        List<String> lore = List.of("&7Um item raro", "&aUse com sabedoria!");
-        ItemBuilder loreItemBuilder = new ItemBuilder(Material.NETHER_STAR);
-        loreItemBuilder.setName("&bEstrela do Nether");
-        loreItemBuilder.setLore(lore);
-        ItemStack loreItem = loreItemBuilder.build();
-
-        // Item encantado
-        ItemBuilder enchantedItemBuilder = new ItemBuilder(Material.DIAMOND_SWORD);
-        enchantedItemBuilder.setName("&cEspada Diamante");
-        enchantedItemBuilder.addEnchant(Enchantment.DAMAGE_ALL, 3);
-        ItemStack enchantedItem = enchantedItemBuilder.build();
-
-        // Item brilhante
-        ItemBuilder glowingItemBuilder = new ItemBuilder(Material.IRON_SWORD);
-        glowingItemBuilder.setName("&fEspada Brilhante");
-        glowingItemBuilder.setGlowing(true);
-        ItemStack glowingItem = glowingItemBuilder.build();
-    }
-}
+```java
+String base64Texture = "base64_string_from_minecraft-heads.com";
+ItemBuilder headItemBuilder = new ItemBuilder(Material.SKULL_ITEM);
+headItemBuilder.setHead(base64Texture);
+ItemStack customHead = headItemBuilder.build();
 ```
