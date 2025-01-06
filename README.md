@@ -217,7 +217,7 @@ ItemStack glowingItem = glowingItemBuilder.build();
 
 ```java
 UUID playerUUID = UUID.fromString("player-uuid-here");
-ItemBuilder headItemBuilder = new ItemBuilder(Material.SKULL_ITEM);
+ItemBuilder headItemBuilder = new ItemBuilder();
 headItemBuilder.setHead(playerUUID);
 ItemStack playerHead = headItemBuilder.build();
 ```
@@ -228,7 +228,7 @@ Para obter o valor base64 de uma cabeça personalizada, acesse o site [Minecraft
 
 ```java
 String base64Texture = "base64_string_from_minecraft-heads.com";
-ItemBuilder headItemBuilder = new ItemBuilder(Material.SKULL_ITEM);
+ItemBuilder headItemBuilder = new ItemBuilder();
 headItemBuilder.setHead(base64Texture);
 ItemStack customHead = headItemBuilder.build();
 ```
