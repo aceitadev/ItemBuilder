@@ -183,10 +183,9 @@ ItemStack namedItem = namedItemBuilder.build();
 Defina um nome e uma lore com cores para o item:
 
 ```java
-List<String> lore = List.of("&7Um item raro", "&aUse com sabedoria!");
 ItemBuilder loreItemBuilder = new ItemBuilder(Material.NETHER_STAR);
 loreItemBuilder.setName("&bEstrela do Nether");
-loreItemBuilder.setLore(lore);
+loreItemBuilder.setLore("&7Um item raro", "&aUse com sabedoria!");
 ItemStack loreItem = loreItemBuilder.build();
 ```
 
