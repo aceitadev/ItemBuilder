@@ -224,7 +224,7 @@ ItemStack playerHead = headItemBuilder.build();
 
 #### Adicionar Cabeça de Jogador por Base64:
 
-Para obter o valor base64 de uma cabeça personalizada, acesse o site [Minecraft Heads](https://minecraft-heads.com/custom-heads), onde você pode criar cabeças personalizadas e obter o valor base64 da textura. Após obter o base64, faça assim:
+Para obter o valor base64 de uma cabeça personalizada, acesse o site [Minecraft Heads](https://minecraft-heads.com/custom-heads), onde tem varias cabeças personalizadas e você pode obter o valor base64 da textura. Após obter o base64, faça assim:
 
 ```java
 String base64Texture = "base64_string_from_minecraft-heads.com";
